@@ -7,7 +7,6 @@ import (
 
 	"github.com/SzymonSolecki/json-log-viewer/pkg/data"
 	"github.com/SzymonSolecki/json-log-viewer/pkg/ui"
-	"github.com/rivo/tview"
 )
 
 func main() {
@@ -31,18 +30,10 @@ func main() {
 		fmt.Println("No data found")
 		os.Exit(0)
 	}
-	app := tview.NewApplication()
 
-	topBox := tview.NewBox().SetBorder(true).SetTitle("Top")
-	table := ui.NewDataTable()
+	app := ui.NewApp()
 
-	table.Pouplate(headers, parsedData)
-
-	flex := tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(topBox, 0, 10, false).
-		AddItem(table, 0, 100, true)
-
-	if err := app.SetRoot(flex, true).SetFocus(table).Run(); err != nil {
+	if err := app.Run(headers, parsedData); err != nil {
 		panic(err)
 	}
 }
