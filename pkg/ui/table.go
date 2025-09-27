@@ -60,39 +60,22 @@ func (dt *DataTable) UpdateView(rowData data.RowData) {
 	}
 }
 
-func (dt *DataTable) ApplyFilter(filterText string) {
-	// If the filter is empty, show all data
-	if strings.TrimSpace(filterText) == "" {
-		dt.UpdateView(dt.originalData)
-		return
-	}
+func (dt *DataTable) ResetFilter() {
+	dt.UpdateView(dt.originalData)
+}
 
-	parts := strings.SplitN(filterText, ":", 2)
-	if len(parts) != 2 {
-		return // Invalid filter format
-	}
+func (dt *DataTable) ApplyFilter(filterColumnIndex int, filterValue string) {
+	filteredData := data.RowData{}
+	header := dt.headers[filterColumnIndex]
 
-	colIndexStr, searchTerm := parts[0], strings.ToLower(strings.TrimSpace(parts[1]))
-	var colIndex int
-	if _, err := fmt.Sscanf(colIndexStr, "%d", &colIndex); err != nil {
-		return // Invalid column index
-	}
-
-	if colIndex < 0 || colIndex >= len(dt.headers) {
-		return // Column index out of bounds
-	}
-
-	headerToFilter := dt.headers[colIndex]
-	filteredData := make([]map[string]any, 0)
-
-	for _, row := range dt.originalData {
-		value, ok := row[headerToFilter]
+	for _, v := range dt.originalData {
+		value, ok := v[header]
 		if !ok {
 			continue
 		}
-		cellValue := strings.ToLower(fmt.Sprintf("%v", value))
-		if strings.Contains(cellValue, searchTerm) {
-			filteredData = append(filteredData, row)
+		cellValue := strings.ToLower(fmt.Sprintf("%s", value))
+		if strings.Contains(cellValue, strings.ToLower(filterValue)) {
+			filteredData = append(filteredData, v)
 		}
 	}
 
