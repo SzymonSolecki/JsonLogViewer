@@ -7,7 +7,7 @@ import (
 
 func NewViewPage(pages *tview.Pages) (*tview.Frame, *tview.TextView) {
 	view := tview.NewTextView().
-		SetDynamicColors(true)
+		SetDynamicColors(true).SetScrollable(true)
 
 	frame := tview.NewFrame(view)
 	frame.SetBorder(true).
