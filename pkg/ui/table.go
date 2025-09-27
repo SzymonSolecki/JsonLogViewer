@@ -19,7 +19,7 @@ type DataTable struct {
 
 func NewDataTable() *DataTable {
 	table := tview.NewTable().
-		SetBorders(true).SetFixed(1, 0)
+		SetBorders(true).SetFixed(1, 0).SetSelectable(true, true)
 
 	return &DataTable{
 		Table: table,
