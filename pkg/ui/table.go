@@ -26,21 +26,20 @@ func NewDataTable() *DataTable {
 	}
 }
 
-func (dt *DataTable) Populate(headers data.Headers, rowData data.RowData) {
-	dt.headers = headers
-	dt.originalData = rowData
-	dt.UpdateView(rowData)
+func (dt *DataTable) Populate(tableData *data.ParsedData) {
+	dt.headers = tableData.Headers
+	dt.originalData = tableData.Data
+
+	dt.UpdateView(dt.originalData)
 }
 
 func (dt *DataTable) UpdateView(rowData data.RowData) {
 	dt.Clear()
 
-	greenColor := tcell.ColorGreen
-	whiteColor := tcell.ColorWhite
 	for i, value := range dt.headers {
 		dt.SetCell(0, i,
 			tview.NewTableCell(value).
-				SetTextColor(greenColor).
+				SetTextColor(tcell.ColorGreen).
 				SetAlign(tview.AlignCenter).
 				SetExpansion(1),
 		)
@@ -52,7 +51,7 @@ func (dt *DataTable) UpdateView(rowData data.RowData) {
 			formattedCell := fmt.Sprintf("%v", row[value])
 			dt.SetCell(i+1, j,
 				tview.NewTableCell(formattedCell).
-					SetTextColor(whiteColor).
+					SetTextColor(tcell.ColorWhite).
 					SetAlign(tview.AlignCenter).
 					SetExpansion(1),
 			)
@@ -74,7 +73,7 @@ func (dt *DataTable) ApplyFilter(filterValue string) {
 		if !ok {
 			continue
 		}
-		cellValue := strings.ToLower(fmt.Sprintf("%s", value))
+		cellValue := strings.ToLower(fmt.Sprintf("%v", value))
 		if strings.Contains(cellValue, strings.ToLower(filterValue)) {
 			filteredData = append(filteredData, v)
 		}
