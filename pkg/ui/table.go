@@ -12,7 +12,8 @@ import (
 
 type DataTable struct {
 	*tview.Table
-	headers data.Headers
+	headers      data.Headers
+	originalData data.RowData
 }
 
 func NewDataTable() *DataTable {
@@ -25,9 +26,17 @@ func NewDataTable() *DataTable {
 }
 
 func (dt *DataTable) Pouplate(headers data.Headers, rowData data.RowData) {
+	dt.headers = headers
+	dt.originalData = rowData
+	dt.UpdateView(rowData)
+}
+
+func (dt *DataTable) UpdateView(rowData data.RowData) {
+	dt.Clear()
+
 	greenColor := tcell.ColorGreen
 	whiteColor := tcell.ColorWhite
-	for i, value := range headers {
+	for i, value := range dt.headers {
 		dt.SetCell(0, i,
 			tview.NewTableCell(value).
 				SetTextColor(greenColor).
@@ -37,7 +46,7 @@ func (dt *DataTable) Pouplate(headers data.Headers, rowData data.RowData) {
 	}
 
 	for i, row := range rowData {
-		for j, value := range headers {
+		for j, value := range dt.headers {
 
 			formattedCell := fmt.Sprintf("%v", row[value])
 			dt.SetCell(i+1, j,
