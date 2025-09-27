@@ -13,16 +13,21 @@ type (
 	Headers []string
 )
 
-func ParseJSON(reader *os.File) (Headers, RowData, error) {
+type ParsedData struct {
+	Headers Headers
+	Data    RowData
+}
+
+func ParseJSON(reader *os.File) (*ParsedData, error) {
 	var data RowData
 
 	decoder := json.NewDecoder(reader)
 	if err := decoder.Decode(&data); err != nil {
-		return nil, nil, fmt.Errorf("failed to decode json: %w", err)
+		return &ParsedData{}, fmt.Errorf("failed to decode json: %w", err)
 	}
 
 	if len(data) == 0 {
-		return Headers{}, RowData{}, nil
+		return &ParsedData{}, nil
 	}
 
 	headers := make(Headers, 0, len(data[0]))
@@ -31,5 +36,8 @@ func ParseJSON(reader *os.File) (Headers, RowData, error) {
 	}
 	sort.Strings(headers)
 
-	return headers, data, nil
+	return &ParsedData{
+		Headers: headers,
+		Data:    data,
+	}, nil
 }
