@@ -64,9 +64,10 @@ func (dt *DataTable) ResetFilter() {
 	dt.UpdateView(dt.originalData)
 }
 
-func (dt *DataTable) ApplyFilter(filterColumnIndex int, filterValue string) {
+func (dt *DataTable) ApplyFilter(filterValue string) {
 	filteredData := data.RowData{}
-	header := dt.headers[filterColumnIndex]
+	_, col := dt.GetSelection()
+	header := dt.headers[col]
 
 	for _, v := range dt.originalData {
 		value, ok := v[header]
