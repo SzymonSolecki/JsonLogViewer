@@ -39,7 +39,7 @@ func main() {
 
 	app.SetRoot(pages, true)
 
-	if err := app.Run(); err != nil {
+	if err := app.EnableMouse(true).Run(); err != nil {
 		panic(err)
 	}
 }
