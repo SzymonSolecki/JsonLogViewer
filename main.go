@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/SzymonSolecki/json-log-viewer/pkg"
 	"github.com/SzymonSolecki/json-log-viewer/pkg/data"
 	"github.com/SzymonSolecki/json-log-viewer/pkg/ui/pages"
 	"github.com/rivo/tview"
@@ -32,6 +33,7 @@ func main() {
 		os.Exit(0)
 	}
 
+	pkg.SetGlobalStyle()
 	app := tview.NewApplication()
 	pages := pages.NewRootPage(parsedData, app)
 

@@ -6,18 +6,26 @@ import (
 )
 
 func getHelpPage1() string {
-	return `[green]Navigation
+	return `[seagreen]Navigation
+[burlywood]Left arrow, h[white]: Move left.
+[burlywood]Right arrow, l[white]: Move right.
+[burlywood]Down arrow, j[white]: Move down.
+[burlywood]Up arrow, k[white]: Move up.
+[burlywood]0[white]: Move to the first column.
+[burlywood]$[white]: Move to the last column.
+[burlywood]g[white]: Move to the first row.
+[burlywood]G[white]: Move to the last row.
 
-[yellow]Left arrow, h[white]: Move left.
-[yellow]Right arrow, l[white]: Move right.
-[yellow]Down arrow, j[white]: Move down.
-[yellow]Up arrow, k[white]: Move up.
-[yellow]f[white]: Filter column by value from the selected cell.
-[yellow]Enter[white]: Filter column by provided value.
-[yellow]y[white]: Copy value from the selected cell.
-[yellow]v[white]: Preview selected cell in bigger window.
+[seagreen]Filtering
+[burlywood]f[white]: Filter column by value from the selected cell.
+[burlywood]Enter[white]: Filter column by provided value.
 
-[blue]Press press Escape to return.`
+[seagreen]Other
+[burlywood]y[white]: Copy value from the selected cell.
+[burlywood]v[white]: Preview selected cell in bigger window.
+[burlywood]Ctrl+C, q[white]: Quit the app.
+
+[mediumpurple]Press press Escape to return.`
 }
 
 func NewHelpPage(pages *tview.Pages) *tview.Frame {

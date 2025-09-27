@@ -15,20 +15,30 @@ func NewTablePage(tableData *data.ParsedData, app *tview.Application, pages *tvi
 
 	tf := tview.NewInputField()
 	tf.SetBorder(true)
-	tf.SetFieldBackgroundColor(tcell.ColorBlack)
-	tf.SetPlaceholderStyle(tf.GetPlaceholderStyle().Background(tcell.ColorBlack))
-	tf.SetPlaceholder("Filter by...")
+	tf.SetPlaceholderStyle(tf.GetPlaceholderStyle().
+		Background(tview.Styles.PrimitiveBackgroundColor).
+		Foreground(tview.Styles.SecondaryTextColor),
+	)
+	tf.SetFieldBackgroundColor(tview.Styles.PrimitiveBackgroundColor)
+	tf.SetFieldTextColor(tview.Styles.SecondaryTextColor)
+	tf.SetPlaceholder("Press F1 for help, press Ctrl-C or q to exit")
+
+	additionalInfo := tview.NewTextView().
+		SetDynamicColors(true).
+		SetWrap(true).
+		SetWordWrap(true)
 
 	layout := tview.NewFlex().
 		SetDirection(tview.FlexRow).
 		AddItem(tf, 0, 5, false).
-		AddItem(dt, 0, 100, true)
+		AddItem(dt, 0, 100, true).
+		AddItem(additionalInfo, 1, 0, false)
 
 	dt.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Rune() {
 		case 'f':
 			row, col := dt.GetSelection()
-			dt.ApplyFilter(dt.GetCell(row, col).Text)
+			dt.ApplyFilter(dt.GetCell(row, col).Text, additionalInfo)
 			return nil
 		case 'y':
 			row, col := dt.GetSelection()
@@ -47,12 +57,21 @@ func NewTablePage(tableData *data.ParsedData, app *tview.Application, pages *tvi
 			_, col := dt.GetSelection()
 			dt.Select(dt.GetRowCount()-1, col)
 			return nil
+		case '0':
+			row, _ := dt.GetSelection()
+			dt.Select(row, 0)
+			return nil
+		case '$':
+			row, _ := dt.GetSelection()
+			dt.Select(row, dt.GetColumnCount()-1)
+			return nil
 		case 'q':
 			app.Stop()
 			return nil
 		}
 		if event.Key() == tcell.KeyEsc {
 			dt.ResetFilter()
+			additionalInfo.SetText("")
 			return nil
 		}
 		return event
@@ -65,7 +84,7 @@ func NewTablePage(tableData *data.ParsedData, app *tview.Application, pages *tvi
 			if result == "" {
 				result = dt.GetCell(row, col).Text
 			}
-			dt.ApplyFilter(result)
+			dt.ApplyFilter(result, additionalInfo)
 		}
 		tf.SetText("")
 		app.SetFocus(dt)
