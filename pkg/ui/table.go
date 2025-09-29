@@ -51,7 +51,8 @@ func (dt *DataTable) UpdateView(rowData data.RowData) {
 			dt.SetCell(i+1, j,
 				tview.NewTableCell(formattedCell).
 					SetAlign(tview.AlignCenter).
-					SetExpansion(1),
+					SetExpansion(1).
+					SetMaxWidth(70),
 			)
 		}
 	}
@@ -66,14 +67,11 @@ func (dt *DataTable) ApplyFilter(filterValue string, statusText ...*tview.TextVi
 	_, col := dt.GetSelection()
 	header := dt.headers[col]
 
-	for _, v := range dt.originalData {
-		value, ok := v[header]
-		if !ok {
-			continue
-		}
+	for _, row := range dt.originalData {
+		value := row[header]
 		cellValue := strings.ToLower(fmt.Sprintf("%v", value))
 		if strings.Contains(cellValue, strings.ToLower(filterValue)) {
-			filteredData = append(filteredData, v)
+			filteredData = append(filteredData, row)
 		}
 	}
 
