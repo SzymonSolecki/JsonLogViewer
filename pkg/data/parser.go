@@ -4,7 +4,9 @@ package data
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
 	"os"
+	"slices"
 	"sort"
 )
 
@@ -30,10 +32,14 @@ func ParseJSON(reader *os.File) (*ParsedData, error) {
 		return &ParsedData{}, nil
 	}
 
-	headers := make(Headers, 0, len(data[0]))
-	for key := range data[0] {
-		headers = append(headers, key)
+	headersSet := map[string]struct{}{}
+	for _, row := range data {
+		for header := range row {
+			headersSet[header] = struct{}{}
+		}
 	}
+
+	headers := slices.Collect(maps.Keys(headersSet))
 	sort.Strings(headers)
 
 	return &ParsedData{
